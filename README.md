@@ -16,6 +16,7 @@
 4. 🤝 **Kymppikaverit** – mitkä luvut tekevät yhdessä kympin
 5. 🚀 **Yli kympin plussalla** – täytä ensin kymppi: 8 + 5 = 8 + 2 + 3
 6. 🪂 **Yli kympin miinuksella** – mene ensin kymppiin: 13 − 5 = 13 − 3 − 2
+7. 🕷️ **Hämähäkin hypyt** – satataulussa hyppy alas on +10 ja ylös −10: 24 → 54 on 24 + 30
 
 Jokaisessa aiheessa: 📖 **Opi** (animoitu selitys, luetaan ääneen) → ✏️ **Harjoittele** (kuvat auttavat) → 🚀 **Haaste** (ilman apua). 🎯 **Päivän treeni** kertaa vaikeimmat tehtävät.
 

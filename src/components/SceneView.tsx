@@ -5,6 +5,7 @@ import { COUNT_STAGGER } from '../config';
 import { framesFor, framesScene } from '../logic/scenes';
 import type { CompareScene, FramesScene, Scene } from '../logic/types';
 import { Croc } from './Croc';
+import { HundredGrid } from './HundredGrid';
 import { NumberBond } from './NumberBond';
 import { TenFrame, type FrameSize } from './TenFrame';
 
@@ -74,9 +75,12 @@ function CompareView({ scene }: { scene: CompareScene }) {
 }
 
 export function SceneView({ scene, size = 'lg' }: { scene: Scene; size?: FrameSize }) {
-  return scene.kind === 'compare' ? (
-    <CompareView scene={scene} />
-  ) : (
-    <FramesView scene={scene} size={size} />
-  );
+  switch (scene.kind) {
+    case 'compare':
+      return <CompareView scene={scene} />;
+    case 'hundred':
+      return <HundredGrid scene={scene} />;
+    case 'frames':
+      return <FramesView scene={scene} size={size} />;
+  }
 }

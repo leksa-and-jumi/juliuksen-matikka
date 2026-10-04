@@ -1,6 +1,6 @@
 import type { TopicId } from './types';
 
-export type TopicColor = 'grass' | 'tomato' | 'sky' | 'grape' | 'tangerine' | 'bubble';
+export type TopicColor = 'grass' | 'tomato' | 'sky' | 'grape' | 'tangerine' | 'bubble' | 'teal';
 
 export interface TopicInfo {
   id: TopicId;
@@ -75,6 +75,17 @@ export const TOPICS: readonly TopicInfo[] = [
     emoji: '🪂',
     color: 'bubble',
     example: [13, 5],
+    stepped: true,
+  },
+  {
+    id: 'hundred',
+    title: 'Hämähäkin hypyt',
+    subtitle: 'Satataulussa yksi hyppy alas on +10 ja ylös −10!',
+    badge: '24 + 30',
+    emoji: '🕷️',
+    color: 'teal',
+    // a = start, b = jumps (negative = up)
+    example: [24, 3],
     stepped: true,
   },
 ];

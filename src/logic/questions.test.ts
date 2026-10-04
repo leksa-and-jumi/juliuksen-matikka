@@ -5,6 +5,7 @@ import {
   compareSign,
   explain,
   factId,
+  factLabel,
   makeQuestion,
   parseFactId,
   questionFromFact,
@@ -109,7 +110,7 @@ describe('scenes', () => {
 
   it('final explanation scene matches the answer', () => {
     for (const topic of TOPICS) {
-      if (topic.id === 'compare') continue;
+      if (topic.id === 'compare' || topic.id === 'hundred') continue;
       for (const id of allFacts(topic.id)) {
         const q = questionFromFact(id);
         if (!q) throw new Error(id);
@@ -143,5 +144,36 @@ describe('labels', () => {
     expect(factLabel('bridgeAdd:8:5')).toBe('8 + 5');
     expect(factLabel('compare:3:7')).toBe('3 ○ 7');
     expect(factLabel('pairs10:7:3')).toBe('7 + ? = 10');
+  });
+});
+
+describe('spider jumps on the hundred square', () => {
+  it('reads the school example 24 → 54 as 24 + 30', () => {
+    const q = makeQuestion('hundred', 24, 3);
+    expect(q.tokens).toEqual(['24', '+', '?', '=', '54']);
+    expect(q.answer).toBe(30);
+    expect(q.steps?.map((s) => s.answer)).toEqual([3, 30]);
+    expect(explain(q).at(-1)?.tokens).toEqual(['24', '+', '30', '=', '54']);
+  });
+
+  it('jumping up is minus', () => {
+    const q = makeQuestion('hundred', 54, -3);
+    expect(q.tokens).toEqual(['54', '−', '?', '=', '24']);
+    expect(q.answer).toBe(30);
+  });
+
+  it('keeps every jump inside 1–100', () => {
+    const ids = allFacts('hundred');
+    expect(ids.length).toBe(700);
+    for (const id of ids) {
+      const q = questionFromFact(id);
+      const end = Number(q?.tokens[4]);
+      expect(end, id).toBeGreaterThanOrEqual(1);
+      expect(end, id).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it('labels facts as start → end', () => {
+    expect(factLabel('hundred:48:5')).toBe('48 → 98');
   });
 });

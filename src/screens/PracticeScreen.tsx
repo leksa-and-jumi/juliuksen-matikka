@@ -12,7 +12,7 @@ import { topicStyle } from '../components/topicStyle';
 import { FEEDBACK_DELAY_MS, STREAK_CHEER } from '../config';
 import type { AnswerInput, SessionResult } from '../logic/progress';
 import { dayKey, topicKey } from '../logic/progress';
-import { explain } from '../logic/questions';
+import { explain, tokensToSpeech } from '../logic/questions';
 import {
   answerQuestion,
   buildQuestions,
@@ -138,7 +138,7 @@ export function PracticeScreen({ target, mode, progress, onAnswer, onFinish, onB
       } else {
         setPhase('solved');
         sfx.fanfare();
-        speak(`${q.tokens.slice(0, 3).join(' ')} on ${String(q.answer)}!`);
+        speak(tokensToSpeech(q.tokens.map((t) => (t === '?' ? String(q.answer) : t))));
         later(() => finalize(!hadMistake), FEEDBACK_DELAY_MS * 2);
       }
     },
@@ -253,8 +253,6 @@ export function PracticeScreen({ target, mode, progress, onAnswer, onFinish, onB
                   ? step.say
                   : 'Paljonko on? Kirjoita vastaus!';
 
-  const stepLabels = ['Täytä kymppi', 'Pilko', 'Laske loput'];
-
   return (
     <Screen>
       <div
@@ -289,7 +287,7 @@ export function PracticeScreen({ target, mode, progress, onAnswer, onFinish, onB
 
         {stepped && q.steps && (
           <div className="flex justify-center gap-2">
-            {q.steps.map((_, i) => (
+            {q.steps.map((st, i) => (
               <span
                 key={i}
                 className={`rounded-full border-2 border-ink px-3 py-1 text-sm font-bold sm:text-base ${
@@ -300,7 +298,7 @@ export function PracticeScreen({ target, mode, progress, onAnswer, onFinish, onB
                       : 'bg-white'
                 }`}
               >
-                {i + 1}. {stepLabels[i]}
+                {i + 1}. {st.label}
               </span>
             ))}
           </div>

@@ -63,3 +63,10 @@ export const AVATARS = [
 export const SPEECH_RESTART_MS = 80;
 /** Preferred Finnish voice (macOS and iOS); any fi-* voice is used otherwise. */
 export const PREFERRED_VOICE = 'Satu';
+
+/** Hundred square (1–100) and the spider's jumps on it. */
+export const HUNDRED_MAX = 100;
+export const HUNDRED_COLS = 10;
+export const HUNDRED_MAX_JUMPS = 5;
+/** Seconds per spider hop. */
+export const SPIDER_HOP = 0.55;
