@@ -5,18 +5,33 @@ let enabled = true;
 
 export function setSoundEnabled(on: boolean): void {
   enabled = on;
-  if (!on) window.speechSynthesis?.cancel();
 }
 
-function audio(): AudioContext | null {
-  if (!enabled) return null;
+function context(): AudioContext | null {
   try {
     ctx ??= new AudioContext();
-    if (ctx.state === 'suspended') void ctx.resume();
+    if (ctx.state !== 'running') void ctx.resume();
     return ctx;
   } catch {
     return null;
   }
+}
+
+function audio(): AudioContext | null {
+  return enabled ? context() : null;
+}
+
+/**
+ * Browsers start audio muted until the page is tapped. Called on the first
+ * tap: resumes the audio context and plays a silent sound to unlock it (iOS).
+ */
+export function unlockAudio(): void {
+  const ac = context();
+  if (!ac) return;
+  const source = ac.createBufferSource();
+  source.buffer = ac.createBuffer(1, 1, ac.sampleRate);
+  source.connect(ac.destination);
+  source.start();
 }
 
 interface Note {
