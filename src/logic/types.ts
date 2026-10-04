@@ -1,4 +1,5 @@
-export type TopicId = 'compare' | 'add10' | 'sub10' | 'pairs10' | 'bridgeAdd' | 'bridgeSub';
+export type TopicId =
+  'compare' | 'add10' | 'sub10' | 'pairs10' | 'bridgeAdd' | 'bridgeSub' | 'hundred';
 
 /** practice = pictures and steps help, challenge = answer on your own. */
 export type Mode = 'practice' | 'challenge';
@@ -36,7 +37,18 @@ export interface CompareScene {
   glow?: 'left' | 'right' | 'both';
 }
 
-export type Scene = FramesScene | CompareScene;
+/** The 1–100 square with the spider's jumps. */
+export interface HundredScene {
+  kind: 'hundred';
+  /** Numbers the spider visits, in order. Empty = no spider yet. */
+  path: number[];
+  /** true = whole square, false = small piece around the path. */
+  full: boolean;
+  /** Highlight that the ones digit stays the same. */
+  onesGlow?: boolean;
+}
+
+export type Scene = FramesScene | CompareScene | HundredScene;
 
 /** Equation tokens. '?' is the blank the child fills in. */
 export type Token = string;
@@ -51,6 +63,8 @@ export interface ExplainStep {
 
 /** One small sub-question when a bridging-ten problem is solved step by step. */
 export interface ScaffoldStep {
+  /** Short name shown above the task, e.g. "Täytä kymppi". */
+  label: string;
   tokens: Token[];
   answer: number;
   say: string;

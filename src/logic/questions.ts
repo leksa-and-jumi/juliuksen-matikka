@@ -1,4 +1,5 @@
-import { COMPARE_MAX, FRAME_SIZE } from '../config';
+import { COMPARE_MAX, FRAME_SIZE, HUNDRED_COLS, HUNDRED_MAX_JUMPS } from '../config';
+import { isOnSquare, jumpPath } from './hundred';
 import { framesScene } from './scenes';
 import { TOPICS } from './topics';
 import type { CompareSign, ExplainStep, Question, ScaffoldStep, TopicId } from './types';
@@ -50,6 +51,12 @@ export function allFacts(topic: TopicId): string[] {
       for (let a = FRAME_SIZE + 1; a < 2 * FRAME_SIZE; a++)
         for (let b = 2; b < FRAME_SIZE; b++)
           if (a - b < FRAME_SIZE && a - b > 0) pairs.push([a, b]);
+      break;
+    case 'hundred':
+      // a = start, b = jumps: positive = down (+10 each), negative = up (−10 each)
+      for (let a = 1; a <= HUNDRED_COLS * HUNDRED_COLS; a++)
+        for (let b = -HUNDRED_MAX_JUMPS; b <= HUNDRED_MAX_JUMPS; b++)
+          if (b !== 0 && isOnSquare(a + b * HUNDRED_COLS)) pairs.push([a, b]);
       break;
   }
   return pairs.map(([a, b]) => factId(topic, a, b));
@@ -130,7 +137,58 @@ export function makeQuestion(topic: TopicId, a: number, b: number): Question {
         scene: bridgeSubScene(a, b, 'done'),
         steps: bridgeSubSteps(a, b),
       };
+    case 'hundred': {
+      const { end, amount, op, opWord } = hundredJump(a, b);
+      return {
+        ...base,
+        tokens: [`${a}`, op, '?', '=', `${end}`],
+        answer: amount,
+        say: `Hämähäkki hyppäsi luvusta ${a} lukuun ${end}. ${a} ${opWord} mikä on ${end}?`,
+        scene: { kind: 'hundred', path: jumpPath(a, b), full: false },
+        steps: hundredSteps(a, b),
+      };
+    }
   }
+}
+
+/** Spider jump facts: start a, b jumps (negative = up). */
+export function hundredJump(a: number, b: number) {
+  const down = b > 0;
+  const jumps = Math.abs(b);
+  return {
+    end: a + b * HUNDRED_COLS,
+    jumps,
+    amount: jumps * HUNDRED_COLS,
+    op: down ? '+' : MINUS,
+    opWord: down ? 'plus' : 'miinus',
+    dir: down ? 'alas' : 'ylös',
+  };
+}
+
+const hyppy = (n: number) => (n === 1 ? 'hyppy' : 'hyppyä');
+const kymppi = (n: number) => (n === 1 ? 'kymppi' : 'kymppiä');
+
+function hundredSteps(a: number, b: number): ScaffoldStep[] {
+  const { end, jumps, amount, op, opWord, dir } = hundredJump(a, b);
+  const scene = { kind: 'hundred' as const, path: jumpPath(a, b), full: false };
+  return [
+    {
+      label: 'Laske hypyt',
+      tokens: ['?', 'hyppyä'],
+      answer: jumps,
+      say: `Montako hyppyä hämähäkki hyppäsi ${dir}?`,
+      hint: 'Laske kaaret yksi kerrallaan!',
+      scene,
+    },
+    {
+      label: 'Kirjoita lasku',
+      tokens: [`${a}`, op, '?', '=', `${end}`],
+      answer: amount,
+      say: `Jokainen hyppy on kymppi. ${a} ${opWord} mikä on ${end}?`,
+      hint: `${jumps} ${hyppy(jumps)} on ${jumps} ${kymppi(jumps)} eli ${amount}.`,
+      scene,
+    },
+  ];
 }
 
 export function questionFromFact(id: string): Question | null {
@@ -212,6 +270,7 @@ function bridgeAddSteps(a: number, b: number): ScaffoldStep[] {
   const { need, rest } = splitForAdd(a, b);
   return [
     {
+      label: 'Täytä kymppi',
       tokens: [`${a}`, '+', '?', '=', '10'],
       answer: need,
       say: `Montako puuttuu kympistä? ${a} plus mikä on kymmenen?`,
@@ -219,6 +278,7 @@ function bridgeAddSteps(a: number, b: number): ScaffoldStep[] {
       scene: { ...bridgeAddScene(a, b, 'fill'), bond: undefined },
     },
     {
+      label: 'Pilko',
       tokens: [`${b}`, '=', `${need}`, '+', '?'],
       answer: rest,
       say: `Pilkotaan ${b}. ${b} on ${need} ja mikä?`,
@@ -226,6 +286,7 @@ function bridgeAddSteps(a: number, b: number): ScaffoldStep[] {
       scene: { ...bridgeAddScene(a, b, 'split'), bond: { whole: b, left: need, right: '?' } },
     },
     {
+      label: 'Laske loput',
       tokens: ['10', '+', `${rest}`, '=', '?'],
       answer: a + b,
       say: `Kymmenen plus ${rest} on?`,
@@ -239,6 +300,7 @@ function bridgeSubSteps(a: number, b: number): ScaffoldStep[] {
   const { ones, rest } = splitForSub(a, b);
   return [
     {
+      label: 'Mene kymppiin',
       tokens: [`${a}`, MINUS, '?', '=', '10'],
       answer: ones,
       say: `Montako pitää ottaa pois, että päästään kymppiin? ${a} miinus mikä on kymmenen?`,
@@ -246,6 +308,7 @@ function bridgeSubSteps(a: number, b: number): ScaffoldStep[] {
       scene: bridgeSubScene(a, b, 'start'),
     },
     {
+      label: 'Pilko',
       tokens: [`${b}`, '=', `${ones}`, '+', '?'],
       answer: rest,
       say: `Pilkotaan ${b}. ${b} on ${ones} ja mikä?`,
@@ -253,6 +316,7 @@ function bridgeSubSteps(a: number, b: number): ScaffoldStep[] {
       scene: bridgeSubScene(a, b, 'fill'),
     },
     {
+      label: 'Ota loput pois',
       tokens: ['10', MINUS, `${rest}`, '=', '?'],
       answer: a - b,
       say: `Kymmenen miinus ${rest} on?`,
@@ -535,6 +599,57 @@ export function explain(q: Question): ExplainStep[] {
         },
       ];
     }
+    case 'hundred': {
+      const { end, jumps, amount, op, opWord, dir } = hundredJump(a, b);
+      const path = jumpPath(a, b);
+      const first = path.slice(0, 2);
+      const next = path[1] ?? end;
+      const grows = b > 0 ? 'kasvaa' : 'pienenee';
+      const full = (p: number[], onesGlow = false) => ({
+        kind: 'hundred' as const,
+        path: p,
+        full: true,
+        onesGlow,
+      });
+      const steps: ExplainStep[] = [
+        {
+          text: 'Tämä on satataulu. Siinä on luvut 1–100, ja joka rivillä on 10 lukua.',
+          tokens: q.tokens,
+          scene: full([]),
+        },
+        {
+          text: `Hämähäkki istuu luvussa ${a}. Se hyppää ${dir}päin!`,
+          tokens: q.tokens,
+          highlight: 0,
+          scene: full([a]),
+        },
+        {
+          text: `Yksi hyppy ${dir}: ${a} → ${next}. Luku ${grows} kymmenellä!`,
+          tokens: [`${a}`, op, '10', '=', `${next}`],
+          highlight: 2,
+          scene: full(first),
+        },
+        {
+          text: `Katso ykkösiä: ne pysyvät samoina. Vain kymmenet vaihtuvat!`,
+          tokens: [`${a}`, '→', `${next}`],
+          scene: full(first, true),
+        },
+      ];
+      if (jumps > 1) {
+        steps.push({
+          text: `Hämähäkki jatkaa: ${path.join(' → ')}. Hyppyjä on ${jumps}.`,
+          tokens: path.flatMap((n, i) => (i === 0 ? [`${n}`] : ['→', `${n}`])),
+          scene: full(path),
+        });
+      }
+      steps.push({
+        text: `${jumps} ${hyppy(jumps)} on ${jumps} ${kymppi(jumps)} eli ${amount}. Siis ${a} ${opWord} ${amount} on ${end}!`,
+        tokens: [`${a}`, op, `${amount}`, '=', `${end}`],
+        highlight: 2,
+        scene: full(path, true),
+      });
+      return steps;
+    }
   }
 }
 
@@ -558,5 +673,6 @@ export function factLabel(id: string): string {
   if (!q) return id;
   if (q.topic === 'compare') return `${q.a} ○ ${q.b}`;
   if (q.topic === 'pairs10') return `${q.a} + ? = 10`;
+  if (q.topic === 'hundred') return `${q.a} → ${hundredJump(q.a, q.b).end}`;
   return q.tokens.slice(0, 3).join(' ');
 }
