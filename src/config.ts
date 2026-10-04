@@ -58,3 +58,8 @@ export const AVATARS = [
   { emoji: '🐧', name: 'Pingviini' },
   { emoji: '🐯', name: 'Tiikeri' },
 ] as const;
+
+/** Wait after cancelling speech before speaking again (Chrome drops it otherwise). */
+export const SPEECH_RESTART_MS = 80;
+/** Preferred Finnish voice (macOS and iOS); any fi-* voice is used otherwise. */
+export const PREFERRED_VOICE = 'Satu';
