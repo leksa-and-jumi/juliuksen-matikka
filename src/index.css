@@ -1,0 +1,84 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fredoka';
+
+@theme static {
+  --font-sans: 'Fredoka Variable', ui-rounded, system-ui, sans-serif;
+
+  --color-ink: #1f1a3d;
+  --color-paper: #fff8e8;
+  --color-card: #ffffff;
+  --color-muted: #6b6590;
+
+  --color-sun: #ffd23f;
+  --color-tomato: #ff4d5e;
+  --color-sky: #2d7dff;
+  --color-grass: #22c06a;
+  --color-grape: #8c52ff;
+  --color-tangerine: #ff8a1f;
+  --color-bubble: #ff5fa8;
+
+  --color-tomato-soft: #ffe1e4;
+  --color-sky-soft: #dde9ff;
+  --color-grass-soft: #d8f7e5;
+  --color-sun-soft: #fff1bf;
+
+  --shadow-chunky: 0 6px 0 0 var(--color-ink);
+  --shadow-chunky-sm: 0 4px 0 0 var(--color-ink);
+
+  --radius-blob: 2rem;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    background-image: radial-gradient(
+      color-mix(in oklab, var(--color-ink) 9%, transparent) 1.5px,
+      transparent 1.5px
+    );
+    background-size: 26px 26px;
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+
+  button {
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  :focus-visible {
+    outline: 4px solid var(--color-sky);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Big chunky button that "presses down" when tapped. */
+  .chunky {
+    @apply rounded-3xl border-4 border-ink shadow-chunky transition-[transform,box-shadow] duration-100;
+  }
+  .chunky:active:not(:disabled) {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 0 var(--color-ink);
+  }
+  .chunky:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+
+  .panel {
+    @apply rounded-[var(--radius-blob)] border-4 border-ink bg-card shadow-chunky;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

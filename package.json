@@ -1,0 +1,53 @@
+{
+  "name": "juliuksen-matikka",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Julius's math adventure / Juliuksen matikkaseikkailu",
+  "scripts": {
+    "dev": "vite",
+    "convex:dev": "node scripts/convex.mjs dev",
+    "convex:deploy": "node scripts/convex.mjs deploy",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@fontsource-variable/fredoka": "^5.3.0",
+    "canvas-confetti": "^1.9.4",
+    "convex": "^1.46.0",
+    "motion": "^14.0.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}
