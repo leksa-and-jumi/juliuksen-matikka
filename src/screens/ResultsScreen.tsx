@@ -3,7 +3,9 @@ import { motion } from 'motion/react';
 import { useEffect } from 'react';
 import { sfx } from '../audio/sfx';
 import { speak } from '../audio/speech';
+import { Fireworks } from '../components/Fireworks';
 import { Screen, Teacher } from '../components/ui';
+import { FIREWORKS_MS, FIREWORKS_MS_THREE_STARS } from '../config';
 import type { SessionResult } from '../logic/progress';
 import { factLabel } from '../logic/questions';
 
@@ -38,29 +40,17 @@ export function ResultsScreen({
   useEffect(() => {
     sfx.fanfare();
     speak(`${result.score} oikein ${result.total}:stä. ${message}`);
-    const end = Date.now() + (result.stars === 3 ? 1800 : 700);
-    const frame = () => {
-      void confetti({
-        particleCount: 6,
-        angle: 60,
-        spread: 60,
-        origin: { x: 0 },
-        disableForReducedMotion: true,
-      });
-      void confetti({
-        particleCount: 6,
-        angle: 120,
-        spread: 60,
-        origin: { x: 1 },
-        disableForReducedMotion: true,
-      });
-      if (Date.now() < end) requestAnimationFrame(frame);
-    };
-    frame();
+    void confetti({
+      particleCount: 120,
+      spread: 100,
+      origin: { y: 0.35 },
+      disableForReducedMotion: true,
+    });
   }, [result, message]);
 
   return (
     <Screen>
+      <Fireworks durationMs={result.stars === 3 ? FIREWORKS_MS_THREE_STARS : FIREWORKS_MS} />
       <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-6 pt-4 text-center">
         <h1 className="text-5xl font-bold sm:text-6xl">Valmis! 🎉</h1>
         <div className="flex gap-2 text-7xl sm:text-8xl">
