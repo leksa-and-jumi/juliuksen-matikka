@@ -61,12 +61,38 @@ function play(notes: Note[]): void {
   }
 }
 
+const BOOM_GAP_MS = 120;
+let lastBoom = 0;
+
+/** A soft "pum" made of filtered noise, for fireworks. */
+function boom(): void {
+  const ac = audio();
+  const now = performance.now();
+  if (!ac || now - lastBoom < BOOM_GAP_MS) return;
+  lastBoom = now;
+  const length = 0.6;
+  const buffer = ac.createBuffer(1, Math.floor(ac.sampleRate * length), ac.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++)
+    data[i] = (Math.random() * 2 - 1) * (1 - i / data.length) ** 3;
+  const source = ac.createBufferSource();
+  source.buffer = buffer;
+  const filter = ac.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 500 + Math.random() * 500;
+  const gain = ac.createGain();
+  gain.gain.value = 0.35;
+  source.connect(filter).connect(gain).connect(ac.destination);
+  source.start();
+}
+
 const C5 = 523.25;
 const E5 = 659.25;
 const G5 = 783.99;
 const C6 = 1046.5;
 
 export const sfx = {
+  boom,
   tap: () => play([{ freq: 880, start: 0, length: 0.06, type: 'sine', volume: 0.12 }]),
   pop: (step = 0) =>
     play([{ freq: 520 + step * 45, start: 0, length: 0.09, type: 'sine', volume: 0.18 }]),

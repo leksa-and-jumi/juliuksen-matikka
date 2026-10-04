@@ -70,3 +70,23 @@ export const HUNDRED_COLS = 10;
 export const HUNDRED_MAX_JUMPS = 5;
 /** Seconds per spider hop. */
 export const SPIDER_HOP = 0.55;
+
+/** Fireworks at the end of a round. Distances in CSS pixels, time in seconds. */
+export const FIREWORKS_MS = 4500;
+export const FIREWORKS_MS_THREE_STARS = 8000;
+export const FIREWORK_LAUNCH_EVERY_MS = 420;
+export const FIREWORK_GRAVITY = 260;
+export const FIREWORK_SPARKS = 90;
+export const FIREWORK_SPARK_SPEED = 360;
+export const FIREWORK_SPARK_LIFE = 1.4;
+export const FIREWORK_DRAG = 0.985;
+export const FIREWORK_COLORS = [
+  '#ff4d5e',
+  '#2d7dff',
+  '#22c06a',
+  '#ffd23f',
+  '#8c52ff',
+  '#ff5fa8',
+  '#ff8a1f',
+  '#10b3a8',
+] as const;
