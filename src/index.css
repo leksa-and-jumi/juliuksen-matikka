@@ -16,11 +16,14 @@
   --color-grape: #8c52ff;
   --color-tangerine: #ff8a1f;
   --color-bubble: #ff5fa8;
+  --color-teal: #10b3a8;
+  --color-teal-soft: #d3f5f2;
 
   --color-tomato-soft: #ffe1e4;
   --color-sky-soft: #dde9ff;
   --color-grass-soft: #d8f7e5;
   --color-sun-soft: #fff1bf;
+  --color-tangerine-soft: #ffe6cc;
 
   --shadow-chunky: 0 6px 0 0 var(--color-ink);
   --shadow-chunky-sm: 0 4px 0 0 var(--color-ink);

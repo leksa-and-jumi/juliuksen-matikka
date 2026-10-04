@@ -2,7 +2,7 @@
 
 Tämä repo kuuluu Julius (7 v) ja Leo (10 v) -veljesten pelistudioon (GitHub-organisaatio `leksa-and-jumi`). Vanhempi valvoo aina istuntoja.
 
-**Juliuksen matikkaseikkailu** on opetussovellus, joka opettaa 7-vuotiaalle matematiikan perusasioita kuvien ja animaatioiden avulla: lukujen vertailu (`<`, `>`, `=`), yhteen- ja vähennyslasku kymppiin asti, kymppikaverit sekä kymmenen ylitys plussalla ja miinuksella. Julius päättää, mitä aiheita, hahmoja ja palkintoja tulee lisää.
+**Juliuksen matikkaseikkailu** on opetussovellus, joka opettaa 7-vuotiaalle matematiikan perusasioita kuvien ja animaatioiden avulla: lukujen vertailu (`<`, `>`, `=`), yhteen- ja vähennyslasku kymppiin asti, kymppikaverit, kymmenen ylitys plussalla ja miinuksella sekä hämähäkin kymppihypyt satataulussa (koulun _What's the calculation?_ -tehtävä). Julius päättää, mitä aiheita, hahmoja ja palkintoja tulee lisää.
 
 ## Näin puhut Juliukselle
 
@@ -18,6 +18,7 @@ Tämä repo kuuluu Julius (7 v) ja Leo (10 v) -veljesten pelistudioon (GitHub-or
 - **Kymmenen ylitys aina kympin kautta**: 8 + 5 = 8 + 2 + 3, 13 − 5 = 13 − 3 − 2. Harjoittele-tilassa kolme pientä vaihetta (täytä kymppi → pilko → laske loput).
 - **Toisto**: väärä vastaus → ratkaisu näytetään animaationa → sama tehtävä tulee kierroksen lopussa uudestaan. Leitner-laatikot (1–5) päättävät, mitä kysytään useammin. Päivän treeni kertaa kaikkia pelattuja aiheita.
 - **Ei rangaistuksia eikä aikapainetta.** Kierroksen lopusta saa aina vähintään yhden tähden.
+- **Satataulu**: hyppy alas = +10, ylös = −10, ykköset pysyvät samoina. Harjoittelussa näytetään koulun monisteen tapaan pala satataulua (3 saraketta).
 - Tekstit luetaan ääneen (Web Speech API, `fi-FI`).
 
 ## Turvallisuus
