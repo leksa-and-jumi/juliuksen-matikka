@@ -13,11 +13,13 @@ interface Props {
 
 export function PlayersScreen({ players, onPick, onCreate }: Props) {
   const [creating, setCreating] = useState(players.length === 0);
+  // One tap is enough: a double tap must not create two players.
+  const [busy, setBusy] = useState(false);
   const nameOf = (emoji: string) => AVATARS.find((a) => a.emoji === emoji)?.name ?? '';
 
   return (
     <Screen>
-      <h1 className="mt-4 text-center text-5xl font-bold sm:text-7xl">
+      <h1 className="mt-4 text-center text-[clamp(1.9rem,9vw,4.5rem)] font-bold">
         Matikka<span className="text-tomato">seikkailu</span> 🚀
       </h1>
       <Teacher say={creating ? 'Valitse oma eläin!' : 'Kuka harjoittelee tänään?'}>
@@ -33,13 +35,17 @@ export function PlayersScreen({ players, onPick, onCreate }: Props) {
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.04 }}
+              disabled={busy}
               onClick={() => {
+                setBusy(true);
                 sfx.correct();
                 onCreate(a.emoji);
               }}
             >
               <span className="text-6xl sm:text-7xl">{a.emoji}</span>
-              <span className="text-base font-semibold sm:text-lg">{a.name}</span>
+              <span className="max-w-full truncate px-1 text-sm font-semibold sm:text-lg">
+                {a.name}
+              </span>
             </motion.button>
           ))}
         </div>

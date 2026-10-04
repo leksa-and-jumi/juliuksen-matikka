@@ -29,15 +29,15 @@ export function HomeScreen(props: Props) {
 
   return (
     <Screen>
-      <header className="flex items-center gap-3">
+      <header className="flex flex-wrap items-center justify-end gap-3">
         <button
-          className="chunky flex h-16 w-16 items-center justify-center bg-white text-5xl"
+          className="chunky mr-auto flex h-16 w-16 items-center justify-center bg-white text-5xl sm:mr-0"
           onClick={props.onSwitchPlayer}
           aria-label="Vaihda pelaajaa"
         >
           {player.avatar}
         </button>
-        <h1 className="flex-1 text-3xl leading-none font-bold sm:text-5xl">
+        <h1 className="order-last w-full text-[clamp(2rem,9vw,3rem)] leading-none font-bold sm:order-none sm:w-auto sm:flex-1">
           Matikka<span className="text-tomato">seikkailu</span>
         </h1>
         <div className="chunky flex h-14 items-center gap-1 bg-sun px-3 text-2xl font-bold">
